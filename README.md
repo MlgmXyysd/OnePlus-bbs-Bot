@@ -14,9 +14,19 @@ PHP + nginx: `do.php?mode=[sign|draw|all]`
 
 - Command:
 
-linux: `php do.php [sign|draw|all]`
+Linux: `php do.php [sign|draw|all]`
 
-windows: `php.exe do.php [sign|draw|all]`
+Windows: `php.exe do.php [sign|draw|all]`
+
+## Auto run
+
+Windows: Task Scheduler `php.exe do.php [sign|draw|all]` Every day 12:00:00
+
+Linux: Crontab `0	12 * * * php.exe do.php [sign|draw|all]`
+
+It is not recommended to set it to 0:00 per day.
+
+There is a high probability of execution failure. (Caused by network, bandwidth, server of bbs, etc.)
 
 ## TODO
 
