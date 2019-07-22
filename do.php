@@ -67,7 +67,7 @@
 	}
 	require (__DIR__) . "/" . "config.php";
 	$cookie = (__DIR__) . "/" . $cookie;
-	$version = "1.3.1";
+	$version = "1.3.2";
 	$link_base = "http://www.oneplusbbs.com/";
 	$link_sumbit = $link_base . "plugin.php?id=dsu_paulsign:sign&operation=qiandao&infloat=1&inajax=1";
 	$link_hash = $link_base . "plugin.php?id=dsu_paulsign:sign";
@@ -92,30 +92,28 @@
 		printFile($logFile, $msg);
 		switch ($mode) {
 			case "SIGN":
-				for (;;) {
-					$formhash = get_formhash(curl_get($link_hash, $cookie, true, true));
-					if ($formhash!="none") {
-						$form = array("qdmode" => 1,
-									  "formhash" => $formhash,
-									  "qdxq" => "kx",
-									  "fastreply" => 0,
-									  "todaysay" => "MlgmXyysd Automatic Signer Bot v".$version.": ".time());
-						$refer = curl_get($link_sumbit, $cookie, true, true, null, $form);
-						$return = getSubStr($refer, "<div class=\"c\">\r\n", "</div>");
-						if (strpos($return, "成功") !== false) {
-							$msg = "[SIGN] [INFO] ".$return."\n";
-							printFile($logFile, $msg);
-							break;
-						}
-						if (strpos($return, "您所在的用户组未被加入允许签到的行列") !== false) {
-							$msg = "[SIGN] [WARN] Cookies has expired.\n";
-							printFile($logFile, $msg);
-							break;
-						}
-					} else {
-						$msg = "[SIGN] [WARN] Form hash is null.\n";
+				$formhash = get_formhash(curl_get($link_hash, $cookie, true, true));
+				if ($formhash!="none") {
+					$form = array("qdmode" => 1,
+								  "formhash" => $formhash,
+								  "qdxq" => "kx",
+								  "fastreply" => 0,
+								  "todaysay" => "MlgmXyysd Automatic Signer Bot v".$version.": ".time());
+					$refer = curl_get($link_sumbit, $cookie, true, true, null, $form);
+					$return = getSubStr($refer, "<div class=\"c\">\r\n", "</div>");
+					if (strpos($return, "成功") !== false) {
+						$msg = "[SIGN] [INFO] ".$return."\n";
 						printFile($logFile, $msg);
+						break;
 					}
+					if (strpos($return, "您所在的用户组未被加入允许签到的行列") !== false) {
+						$msg = "[SIGN] [WARN] Cookies has expired.\n";
+						printFile($logFile, $msg);
+						break;
+					}
+				} else {
+					$msg = "[SIGN] [WARN] Form hash is null.\n";
+					printFile($logFile, $msg);
 				}
 				break;
 			case "DRAW":
